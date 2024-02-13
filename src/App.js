@@ -85,6 +85,7 @@ export default function Game() {
   const [curMove,setCurMove] = useState(0);
   const currentSquares = history[curMove];
   const xIsNext = (curMove %2 ===0);
+  const moveDescription = `You are at move#${curMove}`
 
   function handlePlay(nextSquares) {
     const nextHistory = [...history.slice(0,curMove+1),nextSquares];
@@ -120,6 +121,7 @@ export default function Game() {
       </div>
       <div className="game-info">
         <ol>{moves}</ol>
+        <p>{moveDescription}</p>
       </div>  
     </div>
   )
