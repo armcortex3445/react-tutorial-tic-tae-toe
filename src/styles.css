@@ -88,3 +88,8 @@ body {
 .game-info {
   margin-left: 20px;
 }
+
+.toolbar {
+  margin-top: 100px;
+  padding: 80px;
+}

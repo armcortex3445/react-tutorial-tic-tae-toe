@@ -82,6 +82,8 @@ export default function Game() {
 
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [curMove,setCurMove] = useState(0);
+  const [ascending, setAscending] = useState(true);
+  const displayOrder = ascending ? "ascending" : "descending";
   const currentSquares = history[curMove];
   const xIsNext = (curMove %2 ===0);
   const moveDescription = `You are at move#${curMove}`
@@ -95,6 +97,8 @@ export default function Game() {
   function jumpTo(nextMove){
     setCurMove(nextMove);
   }
+
+
 
   const moves = history.map((squares,move) => {
     let description ='';
@@ -113,14 +117,22 @@ export default function Game() {
 
   })
 
+  const reverseMoves = [...moves].reverse();
+  const currMoves = ascending ? moves : reverseMoves;
+
+
+
   return (
     <div className="game"> 
       <div className="game-board">
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <ol>{moves}</ol>
+        <ol>{currMoves}</ol>
         <p>{moveDescription}</p>
+      </div>
+      <div className="toolbar">
+        <button onClick={() => setAscending(!ascending)}>{displayOrder}</button>  
       </div>  
     </div>
   )
