@@ -66,7 +66,10 @@ function Board({xIsNext , squares, onPlay, currentMove}) {
   
   if(result.winner) {
     status = "Winner: " + result.winner;
-  }else{
+  }else if(result.isDraw){
+    status = "Draw";
+  }
+  else{
     status = "Next Player: " + (xIsNext ? "X" : "O");
   }
 
@@ -77,11 +80,13 @@ function Board({xIsNext , squares, onPlay, currentMove}) {
     if(squares[i] || calculateResult(squares).winner) return;
 
     const nextSquares = squares.slice();
+    const newPosition = { row : parseInt(i/size , 10) , col : i%size};
+
 
     if(xIsNext)  nextSquares[i] = "X";
     else nextSquares[i] = "O";
   
-    onPlay(nextSquares);
+    onPlay(nextSquares,newPosition);
 
   }
 
@@ -89,7 +94,6 @@ function Board({xIsNext , squares, onPlay, currentMove}) {
   return(
   <>
     <div className="status"> {status} </div>
-    {result.isDraw && <p className="status">Draw</p> }
     {array.map(row => (
         <div key={row} className="board-row">
           {array.map( col => (
@@ -106,6 +110,26 @@ function Board({xIsNext , squares, onPlay, currentMove}) {
   );
 }
 
+function MoveHistoryList(moveHistory){
+
+  const ArrHistory = moveHistory.moveHistory;
+
+  if(!Array.isArray(ArrHistory)) {
+    return null;
+  }
+
+  return (
+    ArrHistory.map(ele => {
+      if(ele === null) return null;
+
+      const value = `(${ele.row},${ele.col})`
+
+      return <button className="position-history">{value}</button>
+
+    })
+  )
+}
+
 export default function Game() {
 
   const [history, setHistory] = useState([Array(9).fill(null)]);
@@ -115,11 +139,15 @@ export default function Game() {
   const currentSquares = history[curMove];
   const xIsNext = (curMove %2 ===0);
   const moveDescription = `You are at move#${curMove}`
+  const [moveHistory, setMoveHistory] = useState([]);
 
-  function handlePlay(nextSquares) {
+  function handlePlay(nextSquares,newPosition) {
     const nextHistory = [...history.slice(0,curMove+1),nextSquares];
+    const nextMoveHistory = [ ...moveHistory.slice(0,curMove),newPosition];
     setHistory(nextHistory);
     setCurMove(nextHistory.length - 1);
+    console.log(nextMoveHistory);
+    setMoveHistory(nextMoveHistory);
   }
 
   function jumpTo(nextMove){
@@ -161,6 +189,9 @@ export default function Game() {
       </div>
       <div className="toolbar">
         <button onClick={() => setAscending(!ascending)}>{displayOrder}</button>  
+      </div>  
+      <div className="toolbar">
+        <MoveHistoryList moveHistory={moveHistory} />
       </div>  
     </div>
   )
