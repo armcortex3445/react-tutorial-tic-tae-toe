@@ -110,9 +110,9 @@ function Board({xIsNext , squares, onPlay, currentMove}) {
   );
 }
 
-function MoveHistoryList(moveHistory){
+function MoveHistoryList({moveHistory}){
 
-  const ArrHistory = moveHistory.moveHistory;
+  const ArrHistory = moveHistory;
 
   if(!Array.isArray(ArrHistory)) {
     return null;
